@@ -18,7 +18,8 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 
 import com.pramati.genericwebcrawler.utility.Constants;
-import com.pramati.genericwebcrawler.utility.EmailFilterRule;
+import com.pramati.genericwebcrawler.services.FilterRuleService;
+import com.pramati.genericwebcrawler.services.implementor.EmailFilterRule;
 
 
 public class WCProcessor implements Runnable{
@@ -27,7 +28,7 @@ public class WCProcessor implements Runnable{
 
 	private final  BlockingQueue<String> sharedQueue;
 
-	private EmailFilterRule emailFilterObj;
+	private FilterRuleService filterRuleObj= new EmailFilterRule();
 
 	private final URL urlToCrawl;
 	private  Set <String> crawledUrl = new HashSet<String>();
@@ -65,12 +66,12 @@ public class WCProcessor implements Runnable{
 		{
 			link=it.next();
 
-			if(!crawledUrl.contains(link) && emailFilterObj.filterUrl(url+link))
+			if(!crawledUrl.contains(link) && filterRuleObj.filterCriteria(url+link))
 			{
 				try {
-					System.out.println("adding to the queue"+url+link);
+					System.out.println("adding to the queue"+link);
 					crawledUrl.add(link);
-					sharedQueue.put(url+link);
+					sharedQueue.put(link);
 					crawlUtility(new URL(url,link),"");
 				} 
 
