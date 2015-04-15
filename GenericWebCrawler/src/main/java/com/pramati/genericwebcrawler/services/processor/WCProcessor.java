@@ -1,11 +1,6 @@
 package com.pramati.genericwebcrawler.services.processor;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringWriter;
-import java.io.Writer;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
@@ -19,7 +14,7 @@ import org.apache.log4j.Logger;
 
 import com.pramati.genericwebcrawler.utility.Constants;
 import com.pramati.genericwebcrawler.utility.CrawlerUtility;
-import com.pramati.genericwebcrawler.services.FilterRuleService;
+
 import com.pramati.genericwebcrawler.services.implementor.EmailFilterRule;
 
 
@@ -29,7 +24,7 @@ public class WCProcessor implements Runnable{
 
 	private final  BlockingQueue<String> sharedQueue;
 
-	private FilterRuleService filterRuleObj;
+	private EmailFilterRule filterRuleObj;
 
 	private final URL urlToCrawl;
 	private  Set <String> crawledUrl = new HashSet<String>();
@@ -49,7 +44,8 @@ public class WCProcessor implements Runnable{
 
 	private void init(String year)
 	{
-		this.filterRuleObj= new EmailFilterRule(year);	
+		this.filterRuleObj= new EmailFilterRule();
+		this.filterRuleObj.setYear(year);
 		this.crawlerUitlityObj= new CrawlerUtility();
 
 	}
@@ -66,7 +62,10 @@ public class WCProcessor implements Runnable{
 	private void crawlUtility(URL url)  {
 
 		if(filterRuleObj.exitCriteria(url.toString())) // exit criteria for the recursion
+		{	
+			System.out.println("In exit criteria");
 			return;
+		}
 
 		String pageContent="";	
 		pageContent=crawlerUitlityObj.convertHtmlToString(url,urlToCrawl);
@@ -82,9 +81,13 @@ public class WCProcessor implements Runnable{
 			if(!crawledUrl.contains(link) && filterRuleObj.filterCriteria(url+link))
 			{
 				try {
-					System.out.println("adding to the queue"+link);
+					
 					crawledUrl.add(link);
-					sharedQueue.put(link);
+					if(link.contains("/raw/"))
+					{	
+						 System.out.println("adding to the queue"+link);
+						 sharedQueue.put(link);
+					}
 					crawlUtility(new URL(url,link));
 				} 
 

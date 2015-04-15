@@ -3,7 +3,7 @@ package com.pramati.genericwebcrawler;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
+
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
@@ -26,7 +26,7 @@ public class CrawlerController {
 		
 		 System.out.println("Entered url"+args[0]);
 		   //Creating shared object
-	     BlockingQueue sharedQueue = new ArrayBlockingQueue<String>(10000);
+	     ArrayBlockingQueue<String> sharedQueue = new ArrayBlockingQueue<String>(10000);
 	     
 	    URL crawlUrl=new URL(args[0]);
 	    String year= "2015";//args[1];
@@ -36,12 +36,13 @@ public class CrawlerController {
 	     Thread prodThread = new Thread(new WCProcessor(sharedQueue,crawlUrl,year));
 	     
 	     
-	    FilterRuleService emailFilterObj= new EmailFilterRule(year,sharedQueue);
+	     FilterRuleService  emailFilterObj= new EmailFilterRule(year,sharedQueue);
 	    
 	    
 	     Thread consThread = new Thread(emailFilterObj);
 
 	     //Starting producer and Consumer thread
+	     
 	     prodThread.start();
 	     consThread.start();
 

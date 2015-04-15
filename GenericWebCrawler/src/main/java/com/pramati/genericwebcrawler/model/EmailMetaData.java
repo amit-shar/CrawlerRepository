@@ -5,7 +5,7 @@ public class EmailMetaData {
 	private String subject;
 	private String date;
 	private String senderName;
-	private String receiverName;
+	
 	
 	
 	public String getSubject() {
@@ -26,12 +26,7 @@ public class EmailMetaData {
 	public void setSenderName(String senderName) {
 		this.senderName = senderName;
 	}
-	public String getReceiverName() {
-		return receiverName;
-	}
-	public void setReceiverName(String receiverName) {
-		this.receiverName = receiverName;
-	}
+	
 	
 	
 	
