@@ -29,11 +29,11 @@ public class CrawlerController {
 	     BlockingQueue sharedQueue = new ArrayBlockingQueue<String>(10000);
 	     
 	    URL crawlUrl=new URL(args[0]);
-	   String year= "2015";//args[1];
+	    String year= "2015";//args[1];
 	   
 	 
 	     //Creating Producer and Consumer Thread
-	     Thread prodThread = new Thread(new WCProcessor(sharedQueue,crawlUrl));
+	     Thread prodThread = new Thread(new WCProcessor(sharedQueue,crawlUrl,year));
 	     
 	     
 	    FilterRuleService emailFilterObj= new EmailFilterRule(year,sharedQueue);

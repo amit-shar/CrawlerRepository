@@ -1,21 +1,29 @@
 package com.pramati.genericwebcrawler.services.implementor;
 
+import java.net.URL;
 import java.util.concurrent.BlockingQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.pramati.genericwebcrawler.services.FilterRuleService;
+import com.pramati.genericwebcrawler.utility.CrawlerUtility;
 
-public class EmailFilterRule implements FilterRuleService, Runnable {
+public class EmailFilterRule implements FilterRuleService {
 	
 	private String year;
 	private final  BlockingQueue<String> sharedQueue;
+	private CrawlerUtility crawlerUitlityObj;
 	
 	
 	
 	public EmailFilterRule() {
 		sharedQueue=null;
 	}
+	
+	public EmailFilterRule(String year) {
+		sharedQueue=null;
+	}
+	
 
 	public EmailFilterRule(String year,BlockingQueue<String> sharedQueue){
 		
@@ -51,6 +59,22 @@ public class EmailFilterRule implements FilterRuleService, Runnable {
             }
         }
     }
+
+	public boolean exitCriteria(String link) {
+		
+		if(link.contains("/raw/"))
+			return true;
+		
+		return false;
+	}
+
+	public void downloadContent(String url) {
+		crawlerUitlityObj =new CrawlerUtility();
+		String pageContent = crawlerUitlityObj.convertHtmlToString(url);
+		
+		
+		
+	}
 
 
 
