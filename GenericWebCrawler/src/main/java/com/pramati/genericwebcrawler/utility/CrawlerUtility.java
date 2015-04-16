@@ -77,4 +77,16 @@ public class CrawlerUtility {
 		
 	}
 	
+	
+	public  boolean isValidYear(String mailYear)
+	{
+		if(mailYear!=null && mailYear.length()==4 && !mailYear.equals("0000") && mailYear.matches("[0-9]+") )
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 }

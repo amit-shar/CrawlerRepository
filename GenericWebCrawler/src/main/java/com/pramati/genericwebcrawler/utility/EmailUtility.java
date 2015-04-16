@@ -83,6 +83,7 @@ public class EmailUtility {
 			}
 			return directory;
 		}
+		
 		return null;
 	}
 
@@ -102,7 +103,7 @@ public class EmailUtility {
 			try {
 				if (fw != null) fw.close();
 			} catch (IOException ioe) {
-				
+				logger.error("Exception ocurred while closing the file");	
 			}
 		}
 
@@ -127,7 +128,7 @@ public class EmailUtility {
 				success = messageRawFile.createNewFile();
 			} catch (IOException e) {
 
-				e.printStackTrace();
+				logger.error("Exception ocurred while creating the file");
 			}
 			if (success) {
 				System.out.printf("Successfully created new file: %s%n", messageRawFile);
@@ -156,7 +157,7 @@ public class EmailUtility {
 				//String date[]=emailObj.getDate().split(" ");
 			  filePath=emailObj.getDate()+emailObj.getSenderName().replaceAll("/","")+emailObj.getSubject().replaceAll("/","")+emailObj.getDate()+".txt";
 			  if(filePath.equals(".txt"))
-				  filePath="NoavailableInfo";
+				  filePath="NoavAvailableInfo";
 			
 			}
 
@@ -200,7 +201,7 @@ public class EmailUtility {
 
 			logger.error("Invalid URL");
 		} catch (IOException e) {
-			logger.error("File no found found for the inptut URL");
+			logger.error("File not found for the inptut URL");
 
 		} finally {
 			try {

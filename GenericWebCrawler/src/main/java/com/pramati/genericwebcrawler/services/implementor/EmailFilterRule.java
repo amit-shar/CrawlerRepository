@@ -5,14 +5,19 @@ import java.util.concurrent.BlockingQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
+
 import com.pramati.genericwebcrawler.model.EmailMetaData;
 import com.pramati.genericwebcrawler.services.FilterRuleService;
+
 import com.pramati.genericwebcrawler.utility.Constants;
 import com.pramati.genericwebcrawler.utility.EmailUtility;
 
 
 public class EmailFilterRule implements FilterRuleService, Runnable{
 
+	static Logger logger = Logger.getLogger(EmailFilterRule.class);
+	
 	private String year;
 	private final  BlockingQueue<String> sharedQueue;
 	private EmailUtility emailUitlityObj;
@@ -25,11 +30,13 @@ public class EmailFilterRule implements FilterRuleService, Runnable{
 
 	public EmailFilterRule(String year) {
 		sharedQueue=null;
+		this.year=year;
+		
 	}
 
 
 	public EmailFilterRule(String year,BlockingQueue<String> sharedQueue){
-
+        
 		this.year=year;
 		this.sharedQueue=sharedQueue;
 	}
@@ -48,8 +55,8 @@ public class EmailFilterRule implements FilterRuleService, Runnable{
 	public boolean filterCriteria(String link)
 	{
        
-		String fileterPattern= this.getYear()+Constants.EMAIL_FILTER_CRITERIA;
-		Pattern p =getPattern(fileterPattern);
+		String filterPattern= this.getYear()+Constants.EMAIL_FILTER_CRITERIA;
+		Pattern p =getPattern(filterPattern);
 		Matcher m;
 		m = p.matcher(link);
 	
@@ -71,6 +78,7 @@ public class EmailFilterRule implements FilterRuleService, Runnable{
 				 
 			} catch (InterruptedException ex) {
 				Thread.currentThread().interrupt();
+				logger.error("Interruption ocurred while taking link from shared queue");	
 			}
 		}
 	}

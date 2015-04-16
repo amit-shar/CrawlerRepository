@@ -14,7 +14,6 @@ import org.apache.log4j.Logger;
 
 import com.pramati.genericwebcrawler.utility.Constants;
 import com.pramati.genericwebcrawler.utility.CrawlerUtility;
-
 import com.pramati.genericwebcrawler.services.implementor.EmailFilterRule;
 
 
@@ -29,6 +28,8 @@ public class WCProcessor implements Runnable{
 	private final URL urlToCrawl;
 	private  Set <String> crawledUrl = new HashSet<String>();
 	private CrawlerUtility crawlerUitlityObj;
+	
+	
 
 
 	public WCProcessor(BlockingQueue <String>sharedQueue,URL crawlUrl,String year) {
@@ -59,7 +60,7 @@ public class WCProcessor implements Runnable{
 	}
 
 
-	private void crawlUtility(URL url)  {
+	protected void crawlUtility(URL url)  {
 
 		if(filterRuleObj.exitCriteria(url.toString())) // exit criteria for the recursion
 		{	
@@ -67,39 +68,52 @@ public class WCProcessor implements Runnable{
 			return;
 		}
 
-		String pageContent="";	
-		pageContent=crawlerUitlityObj.convertHtmlToString(url,urlToCrawl);
-		String link;
+		if(filterRuleObj.filterCriteria(url.toString()))
+		{	
+			String pageContent="";	
+			pageContent=crawlerUitlityObj.convertHtmlToString(url,urlToCrawl);
+			String link;
 
-		Set<String> hyperlinksSet= getHyperlinks(pageContent);
-		Iterator<String> it = hyperlinksSet.iterator();
+			Set<String> hyperlinksSet= getHyperlinks(pageContent);
 
-		while(it.hasNext())
-		{
-			link=it.next();
-
-			if(!crawledUrl.contains(link) && filterRuleObj.filterCriteria(url+link))
+			if(hyperlinksSet!=null)
 			{
-				try {
-					
-					crawledUrl.add(link);
-					if(link.contains("/raw/"))
-					{	
-						 System.out.println("adding to the queue"+link);
-						 sharedQueue.put(link);
-					}
-					crawlUtility(new URL(url,link));
-				} 
+				Iterator<String> it = hyperlinksSet.iterator();
 
-				catch (InterruptedException e) {
-					logger.error("Interruption ocurred while adding link to shared queue");		
-				}catch (MalformedURLException e) {
-					logger.error("Invalid URL");
+
+				while(it.hasNext())
+				{
+					link=it.next();
+
+					if(!crawledUrl.contains(link) && filterRuleObj.filterCriteria(url+link))
+					{
+						try {
+
+							crawledUrl.add(link);
+							if(link.contains("/raw/"))
+							{	
+								System.out.println("adding to the queue"+link);
+								sharedQueue.put(link);
+							}
+							crawlUtility(new URL(url,link));
+						} 
+
+						catch (InterruptedException e) {
+							logger.error("Interruption ocurred while adding link to shared queue");		
+						}catch (MalformedURLException e) {
+							logger.error("Invalid URL");
+						}
+					}
 				}
+
+			}
+			else
+			{
+
+				System.out.println("No mails exists for the entered year");
+				logger.error("In WCProcessor crawlUtility(): No mails exists for the entered year"); 
 			}
 		}
-
-
 
 	}
 
@@ -107,7 +121,7 @@ public class WCProcessor implements Runnable{
 
 
 
-	private Set<String> getHyperlinks(String pageContent) {
+	protected Set<String> getHyperlinks(String pageContent) {
 
 		Pattern p = getHyperlinkPattern();
 		Matcher matcher = p.matcher(pageContent);
@@ -126,8 +140,7 @@ public class WCProcessor implements Runnable{
 				} 
 
 			}    
-			else
-				continue;
+
 		}
 
 		return tempLinks;
