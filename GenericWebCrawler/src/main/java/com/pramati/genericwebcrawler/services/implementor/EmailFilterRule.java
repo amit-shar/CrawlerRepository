@@ -1,6 +1,7 @@
 package com.pramati.genericwebcrawler.services.implementor;
 
 
+
 import java.util.concurrent.BlockingQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -9,7 +10,6 @@ import org.apache.log4j.Logger;
 
 import com.pramati.genericwebcrawler.model.EmailMetaData;
 import com.pramati.genericwebcrawler.services.FilterRuleService;
-
 import com.pramati.genericwebcrawler.utility.Constants;
 import com.pramati.genericwebcrawler.utility.EmailUtility;
 
@@ -19,7 +19,7 @@ public class EmailFilterRule implements FilterRuleService, Runnable{
 	static Logger logger = Logger.getLogger(EmailFilterRule.class);
 	
 	private String year;
-	private final  BlockingQueue<String> sharedQueue;
+	private   BlockingQueue<String> sharedQueue;
 	private EmailUtility emailUitlityObj;
    
 
@@ -28,14 +28,10 @@ public class EmailFilterRule implements FilterRuleService, Runnable{
 		sharedQueue=null;
 	}
 
-	public EmailFilterRule(String year) {
-		sharedQueue=null;
-		this.year=year;
-		
-	}
+	
 
 
-	public EmailFilterRule(String year,BlockingQueue<String> sharedQueue){
+	public void init(BlockingQueue<String> sharedQueue,String year){
         
 		this.year=year;
 		this.sharedQueue=sharedQueue;
@@ -97,7 +93,7 @@ public class EmailFilterRule implements FilterRuleService, Runnable{
 		
 		emailUitlityObj =new EmailUtility();
 		
-		String pageContent = emailUitlityObj.convertHtmlToString(Constants.URL_PREFIX+url);
+		String pageContent = emailUitlityObj.convertHtmlToString(url);
 		EmailMetaData emailMetaDataObj= getMetaData(pageContent);
 
 		emailUitlityObj.saveEmail(pageContent,year,emailMetaDataObj);
@@ -158,5 +154,9 @@ public class EmailFilterRule implements FilterRuleService, Runnable{
 		return Pattern.compile(pattern);
 	}
 
+
+
+
+	
 
 }

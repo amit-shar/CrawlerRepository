@@ -26,10 +26,5 @@ public class EmailMetaData {
 	public void setSenderName(String senderName) {
 		this.senderName = senderName;
 	}
-	
-	
-	
-	
-	
 
 }

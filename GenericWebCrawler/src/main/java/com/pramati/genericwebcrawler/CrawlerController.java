@@ -6,6 +6,9 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 
 import com.pramati.genericwebcrawler.services.FilterRuleService;
 import com.pramati.genericwebcrawler.services.processor.WCProcessor;
@@ -33,11 +36,17 @@ public class CrawlerController {
 
 		if(crawlerUtilityObj.isValidYear(year))
 		{
+			ApplicationContext context= new ClassPathXmlApplicationContext("spring.xml");
+			
+			WCProcessor wcProcessorObj= (WCProcessor) context.getBean("crawlerProcessor");
+			wcProcessorObj.init(sharedQueue,crawlUrl,year);
+			
 			//Creating Producer and Consumer Thread
-			Thread prodThread = new Thread(new WCProcessor(sharedQueue,crawlUrl,year));
+			Thread prodThread = new Thread(wcProcessorObj);
+			
 
-
-			FilterRuleService  emailFilterObj= new EmailFilterRule(year,sharedQueue);
+			FilterRuleService  emailFilterObj= (EmailFilterRule) context.getBean("emailFilterRule");
+			emailFilterObj.init(sharedQueue,year);
 
 
 			Thread consThread = new Thread(emailFilterObj);

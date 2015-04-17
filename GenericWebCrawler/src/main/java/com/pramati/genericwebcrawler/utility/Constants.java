@@ -12,6 +12,7 @@ public class Constants {
 	public static final String MAIL_DATE_PATTERN="\\s*Date: \\s*(.*?)(?m)$";
 	public static final String VIEW_RAW_MESSAGE="/raw/";
 	public static final String EMAIL_FILTER_CRITERIA="([0-9])([1-9]?).mbox";
+	public static final String EMAIL_TEST_YEAR="2015";
 	
 
 

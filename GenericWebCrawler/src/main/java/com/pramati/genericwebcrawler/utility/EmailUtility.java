@@ -10,7 +10,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
-
+import java.util.UUID;
 
 import org.apache.log4j.Logger;
 
@@ -152,16 +152,14 @@ public class EmailUtility {
 
 		if(emailObj!=null)
 		{  
-			if(emailObj.getDate()!=null)
-			{
-				//String date[]=emailObj.getDate().split(" ");
-			  filePath=emailObj.getDate()+emailObj.getSenderName().replaceAll("/","")+emailObj.getSubject().replaceAll("/","")+emailObj.getDate()+".txt";
-			  if(filePath.equals(".txt"))
-				  filePath="NoavAvailableInfo";
 			
-			}
+			  filePath=emailObj.getDate()+emailObj.getSenderName()+emailObj.getSubject()+emailObj.getDate()+".txt";
+			  if(filePath.equals(".txt"))
+				  filePath="tempName_"+UUID.randomUUID();
+			
+	     }
 
-		}
+		
 		return filePath;
 
 

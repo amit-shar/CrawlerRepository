@@ -23,7 +23,8 @@ public class WCProcessorTest {
 	@Before
 	public void setUp() throws Exception {
 
-		crawlerProcessorObj= new WCProcessor(queue,null,"2015");
+		crawlerProcessorObj= new WCProcessor();
+		crawlerProcessorObj.init(queue,null,"2015");
 	}
 
 

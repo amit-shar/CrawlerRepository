@@ -6,13 +6,16 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.pramati.genericwebcrawler.utility.Constants;
+
 public class EmailFilterRuleTest {
 
 	private EmailFilterRule emailFilterRuleObj;
 
 	@Before
 	public void setUp() throws Exception {
-		emailFilterRuleObj= new EmailFilterRule("2015"); 
+		emailFilterRuleObj= new EmailFilterRule(); 
+		emailFilterRuleObj.setYear(Constants.EMAIL_TEST_YEAR);
 
 	}
 

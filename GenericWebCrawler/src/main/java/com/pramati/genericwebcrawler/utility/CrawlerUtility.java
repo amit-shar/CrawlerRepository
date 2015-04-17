@@ -29,9 +29,9 @@ public class CrawlerUtility {
 
 		try {
 
-			hyperlink = new URL(baseurl,"");
+			hyperlink = baseurl;//new URL(baseurl,link);
 			
-            System.out.println("In convert to string method"+ hyperlink);
+            //System.out.println("In convert to string method"+ hyperlink);
             
 			if(isHostSame(hyperlink.getHost(),urlToCrawl.getHost()))    //hyperlink.getHost().equals(urlToCrawl.getHost()))
 			{

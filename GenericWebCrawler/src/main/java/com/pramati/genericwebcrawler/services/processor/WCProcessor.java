@@ -21,35 +21,38 @@ public class WCProcessor implements Runnable{
 
 	static Logger logger = Logger.getLogger(WCProcessor.class);
 
-	private final  BlockingQueue<String> sharedQueue;
+	private   BlockingQueue<String> sharedQueue;
 
 	private EmailFilterRule filterRuleObj;
 
-	private final URL urlToCrawl;
+	private  URL urlToCrawl;
 	private  Set <String> crawledUrl = new HashSet<String>();
-	private CrawlerUtility crawlerUitlityObj;
+	private CrawlerUtility crawlerUtilityObj;
 	
 	
+	public WCProcessor(){
+		
+	}
+	
+	public WCProcessor(CrawlerUtility crawlerUtilityObj,EmailFilterRule filterRuleObj)
+	{
+		this.filterRuleObj= new EmailFilterRule();
+		this.crawlerUtilityObj= new CrawlerUtility();
+		
+		
+	}
 
 
-	public WCProcessor(BlockingQueue <String>sharedQueue,URL crawlUrl,String year) {
+	public void init(BlockingQueue <String>sharedQueue,URL crawlUrl,String year) {
 
 		this.sharedQueue = sharedQueue;
 		this.urlToCrawl=crawlUrl;
 		this.crawledUrl = new HashSet<String>();
-		init(year);
-
-
+		this.filterRuleObj.setYear(year);	
 
 	}
 
-	private void init(String year)
-	{
-		this.filterRuleObj= new EmailFilterRule();
-		this.filterRuleObj.setYear(year);
-		this.crawlerUitlityObj= new CrawlerUtility();
-
-	}
+	
 
 	public void run() {
 
@@ -61,60 +64,51 @@ public class WCProcessor implements Runnable{
 
 
 	protected void crawlUtility(URL url)  {
-
-		if(filterRuleObj.exitCriteria(url.toString())) // exit criteria for the recursion
-		{	
-			System.out.println("In exit criteria");
-			return;
-		}
-
-		if(filterRuleObj.filterCriteria(url.toString()))
-		{	
+		
+		crawledUrl.add(url.toString());
+		
+		try{
+			
 			String pageContent="";	
-			pageContent=crawlerUitlityObj.convertHtmlToString(url,urlToCrawl);
+			pageContent=crawlerUtilityObj.convertHtmlToString(url,urlToCrawl);
+			
 			String link;
 
 			Set<String> hyperlinksSet= getHyperlinks(pageContent);
+			
 
 			if(hyperlinksSet!=null)
 			{
 				Iterator<String> it = hyperlinksSet.iterator();
 
-
 				while(it.hasNext())
 				{
 					link=it.next();
+					URL baseurl=new URL(url,link);
+					System.out.println("checking baseurl"+baseurl);
+				if(filterRuleObj.exitCriteria(baseurl.toString()))
+				{	
+					System.out.println("adding to the queue"+baseurl);
+					sharedQueue.put(baseurl.toString());
+					continue;
+				}
 
-					if(!crawledUrl.contains(link) && filterRuleObj.filterCriteria(url+link))
+					if(!crawledUrl.contains(baseurl.toString()) && filterRuleObj.filterCriteria(baseurl.toString()))
 					{
-						try {
-
-							crawledUrl.add(link);
-							if(link.contains("/raw/"))
-							{	
-								System.out.println("adding to the queue"+link);
-								sharedQueue.put(link);
-							}
 							crawlUtility(new URL(url,link));
-						} 
 
-						catch (InterruptedException e) {
-							logger.error("Interruption ocurred while adding link to shared queue");		
-						}catch (MalformedURLException e) {
-							logger.error("Invalid URL");
-						}
 					}
 				}
 
-			}
-			else
-			{
-
-				System.out.println("No mails exists for the entered year");
-				logger.error("In WCProcessor crawlUtility(): No mails exists for the entered year"); 
-			}
+			
 		}
-
+			
+			
+		}catch (InterruptedException e) {
+				logger.error("Interruption ocurred while adding link to shared queue");		
+			} catch (MalformedURLException e) {
+				logger.error("Invalid URL");
+			}
 	}
 
 
@@ -131,13 +125,12 @@ public class WCProcessor implements Runnable{
 		{
 			link=matcher.group(1); 
 
-
 			if(!link.contains(".css"))	{    
 
-				if(!crawledUrl.contains(link))
-				{    
+				//if(!crawledUrl.contains(link))
+			//	{    
 					tempLinks.add(link);
-				} 
+				//} 
 
 			}    
 
