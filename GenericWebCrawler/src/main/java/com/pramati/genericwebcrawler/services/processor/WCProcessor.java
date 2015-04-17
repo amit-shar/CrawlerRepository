@@ -31,7 +31,7 @@ public class WCProcessor implements Runnable{
 	
 	
 	public WCProcessor(){
-		
+		this.filterRuleObj= new EmailFilterRule();
 	}
 	
 	public WCProcessor(CrawlerUtility crawlerUtilityObj,EmailFilterRule filterRuleObj)
@@ -85,7 +85,9 @@ public class WCProcessor implements Runnable{
 				{
 					link=it.next();
 					URL baseurl=new URL(url,link);
+					
 					System.out.println("checking baseurl"+baseurl);
+					
 				if(filterRuleObj.exitCriteria(baseurl.toString()))
 				{	
 					System.out.println("adding to the queue"+baseurl);
@@ -95,7 +97,7 @@ public class WCProcessor implements Runnable{
 
 					if(!crawledUrl.contains(baseurl.toString()) && filterRuleObj.filterCriteria(baseurl.toString()))
 					{
-							crawlUtility(new URL(url,link));
+							crawlUtility(baseurl);
 
 					}
 				}
@@ -121,16 +123,17 @@ public class WCProcessor implements Runnable{
 		Matcher matcher = p.matcher(pageContent);
 		String link;
 		Set<String> tempLinks= new HashSet<String>();
+		
 		while (matcher.find())
 		{
 			link=matcher.group(1); 
 
 			if(!link.contains(".css"))	{    
 
-				//if(!crawledUrl.contains(link))
-			//	{    
+				if(!crawledUrl.contains(link))
+				{    
 					tempLinks.add(link);
-				//} 
+				} 
 
 			}    
 

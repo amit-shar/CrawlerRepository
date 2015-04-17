@@ -154,8 +154,8 @@ public class EmailUtility {
 		{  
 			
 			  filePath=emailObj.getDate()+emailObj.getSenderName()+emailObj.getSubject()+emailObj.getDate()+".txt";
-			  if(filePath.equals(".txt"))
-				  filePath="tempName_"+UUID.randomUUID();
+			 if(filePath.equals(".txt"))
+				  filePath="tempName_"; //+UUID.randomUUID();
 			
 	     }
 

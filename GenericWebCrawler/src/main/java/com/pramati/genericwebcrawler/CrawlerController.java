@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-
 import com.pramati.genericwebcrawler.services.FilterRuleService;
 import com.pramati.genericwebcrawler.services.processor.WCProcessor;
 import com.pramati.genericwebcrawler.services.implementor.EmailFilterRule;
@@ -26,6 +25,7 @@ public class CrawlerController {
 
 		BasicConfigurator.configure();
 		CrawlerUtility crawlerUtilityObj= new CrawlerUtility();
+		
 
 		System.out.println("Entered url"+args[0]);
 		//Creating shared object
@@ -36,6 +36,7 @@ public class CrawlerController {
 
 		if(crawlerUtilityObj.isValidYear(year))
 		{
+			@SuppressWarnings("resource")
 			ApplicationContext context= new ClassPathXmlApplicationContext("spring.xml");
 			
 			WCProcessor wcProcessorObj= (WCProcessor) context.getBean("crawlerProcessor");
