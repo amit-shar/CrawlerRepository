@@ -11,30 +11,31 @@ import org.junit.Test;
 public class EmailUtilityTest {
 
 	private EmailUtility emailUtilityObj;
+
 	@Before
 	public void setUp() throws Exception {
-		
-		emailUtilityObj= new EmailUtility();
+
+		emailUtilityObj = new EmailUtility();
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		
-		emailUtilityObj=null;
+
+		emailUtilityObj = null;
 	}
 
 	@Test
 	public void convertHtmlToStringtest() {
-		
-		assertEquals("",emailUtilityObj.convertHtmlToString("mod_maven/201503.mbox"));
-		
-		
+
+		assertEquals("",
+				emailUtilityObj.convertHtmlToString("mod_maven/201503.mbox"));
+
 	}
-	
+
 	@Test
 	public void createDirectoryTest() {
 
-		File obj =emailUtilityObj.createDirectory(null);
+		File obj = emailUtilityObj.createDirectory(null);
 		assertEquals(obj, null);
 	}
 

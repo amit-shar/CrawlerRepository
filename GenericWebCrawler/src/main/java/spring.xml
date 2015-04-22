@@ -1,26 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
 	   					   http://www.springframework.org/schema/beans/spring-beans.xsd">
-	   					   
-	 <bean id="emailData" class="com.pramati.genericwebcrawler.model.EmailMetaData">       
-	 </bean>
-	 
-	  <bean id="crawlerProcessor" class="com.pramati.genericwebcrawler.services.processor.WCProcessor">
-	     <constructor-arg ref ="crawlUtility"/>   
-	     <constructor-arg ref ="emailFilterRule"/>        
-	 </bean>
-	 
-	  <bean id="crawlUtility" class="com.pramati.genericwebcrawler.utility.CrawlerUtility">     
-	 </bean>
-	 
-	  <bean id="emailUtility" class="com.pramati.genericwebcrawler.utility.EmailUtility">        
-	 </bean>
-	 
-	 
-	  <bean id="emailFilterRule"  class="com.pramati.genericwebcrawler.services.implementor.EmailFilterRule">   
-	  </bean>
-	  
-	
+
+	<bean id="emailData" class="com.pramati.genericwebcrawler.model.EmailMetaData">
+	</bean>
+
+	<bean id="crawlerProcessor"
+		class="com.pramati.genericwebcrawler.services.processor.WCProcessor">
+		<constructor-arg ref="crawlUtility" />
+		<constructor-arg ref="emailFilterRule" />
+	</bean>
+
+	<bean id="crawlUtility" class="com.pramati.genericwebcrawler.utility.CrawlerUtility">
+	</bean>
+
+	<bean id="emailUtility" class="com.pramati.genericwebcrawler.utility.EmailUtility">
+	</bean>
+
+
+	<bean id="emailFilterRule"
+		class="com.pramati.genericwebcrawler.services.implementor.EmailFilterRule">
+	</bean>
+
+
 </beans>
