@@ -14,8 +14,6 @@ public class Constants {
 	public static final String EMAIL_FILTER_CRITERIA = "([0-9])([1-9]?).mbox";
 	public static final String EMAIL_TEST_YEAR = "2015";
 
-	// PRIVATE //
-
 	/**
 	 * The caller references the constants using <Constants.URL_TO_CRAWL> and so
 	 * on. Thus, the caller should be prevented from constructing objects of

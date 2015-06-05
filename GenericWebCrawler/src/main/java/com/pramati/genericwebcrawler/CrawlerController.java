@@ -53,11 +53,7 @@ public class CrawlerController {
 
 			prodThread.start();
 			consThread.start();
-		}
-
-		else {
-
-			System.err.println("Year must contains numbers only");
+		} else {
 			logger.error("In CrawlerController :main(): Year must contains numbers only");
 			throw new NumberFormatException();
 		}
